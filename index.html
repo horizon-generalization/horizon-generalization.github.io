@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Horizon Generalization in Reinforcement Learning" />
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-solarizedlight.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs-bibtex@2.1.0/prism-bibtex.min.js"></script>
+    <link rel="stylesheet" href="static/css/index.css" />
+
+    <title>Horizon Generalization in Reinforcement Learning</title>
+
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-svg.js"></script>
+    <script>
+      function selectContent(query) {
+        var range = document.createRange()
+        var selection = window.getSelection()
+        var elem = document.querySelector(query)
+        range.selectNodeContents(elem)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+    </script>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\[", "\\]"],
+          ],
+          processEscapes: true,
+          macros: {
+            planclass: "\\operatorname{\\mathbf{plan}}",
+            S: "\\mathcal{S}",
+            gS: "\\mathcal{S}",
+            cS: "\\mathcal{S}",
+            cB: "\\mathcal{B}",
+            cA: "\\mathcal{A}",
+            A: "\\mathcal{A}",
+            gA: "\\mathcal{A}",
+            D: "\\mathcal{D}",
+            R: "\\mathbb{R}",
+            E: "\\mathbb{E}",
+            P: "\\mathrm{P}",
+            var: "\\mathrm{Var}",
+            cov: "\\mathrm{Cov}",
+            argmin: "\\mathop{\\arg\\min}",
+            argmax: "\\mathop{\\arg\\max}",
+          },
+        },
+        svg: {
+          fontCache: "global",
+        },
+      }
+    </script>
+    <header>
+      <h1>Horizon Generalization in Reinforcement Learning</h1>
+      <div class="authors">
+        <span class="author equal">Vivek Myers</span> <span class="affil">1</span>
+        <span class="author equal">Catherine Ji</span> <span class="affil">2</span>
+        <span class="author">Benjamin Eysenbach</span> <span class="affil">2</span>
+      </div>
+      <div class="affiliations">
+        <span class="affil">1</span>
+        <span class="institution">UC Berkeley</span>
+        <span class="affil">2</span>
+        <span class="institution">Princeton University</span>
+      </div>
+      <div class="links">
+        <span class="link">
+          <a href="./static/pdf/horizon_generalization.pdf" target="_blank" class="button">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+          </a>
+        </span>
+        <span class="link">
+          <a href="https://arxiv.org/abs/2501.02709" class="button">
+            <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span>
+          </a>
+        </span>
+        <span class="link">
+          <a href="https://github.com/TODO" class="button">
+            <span class="icon"><i class="fas fa-code"></i></span><span>Code</span>
+          </a>
+        </span>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <div class="summary">
+          <video id="overview" controls="" width="99%" poster="./static/videos/overview.png">
+            <source src="static/videos/overview.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </section>
+
+      <section>
+        <div class="columns">
+          <div class="wide">
+            <div class="abstract">
+              <h3>Abstract</h3>
+              <p>
+                We study goal-conditioned RL through the lens of generalization, but not in the
+                traditional sense of random augmentations and domain randomization. Rather, we aim
+                to learn goal-directed policies that generalize with respect to the horizon: after
+                training to reach nearby goals (which are easy to learn), these policies should
+                succeed in reaching distant goals (which are quite challenging to learn). In the
+                same way that invariance is closely linked with generalization is other areas of
+                machine learning (e.g., normalization layers make a network invariant to scale, and
+                therefore generalize to inputs of varying scales), we show that this notion of
+                horizon generalization is closely linked with invariance to planning: a policy
+                navigating towards a goal will select the same actions as if it were navigating to a
+                waypoint en route to that goal. Thus, such a policy trained to reach nearby goals
+                should succeed at reaching arbitrarily-distant goals. Our theoretical analysis
+                proves that both horizon generalization and planning invariance are possible, under
+                some assumptions. We present new experimental results and recall findings from prior
+                work in support of our theoretical results. Taken together, our results open the
+                door to studying how techniques for invariance and generalization developed in other
+                areas of machine learning might be adapted to achieve this alluring property.
+              </p>
+            </div>
+          </div>
+          <div></div>
+          <div class="medium vertical">
+            <video
+              id="overview"
+              width="100%"
+              autoplay
+              loop
+              muted
+              poster="./static/videos/teaser.png">
+              <source src="static/videos/teaser.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Planning Invariance</h2>
+        <p>
+          A key mathematical tool for understanding horizon generalization is a form of temporal
+          invariance obeyed by optimal policies. In the same way that an image classification model
+          that is invariant to rotations will generalize to images of different orientations, we
+          prove that a policy invariant to planning, under certain assumptions, will exhibit horizon
+          generalization.
+        </p>
+        <p>
+          Informally, a goal-conditioned policy is invariant to planning if it can reach distant
+          goals with similar success when conditioned directly on the goal compared to when
+          conditioned on a series of intermediate waypoints. In other words, breaking up a complex
+          task into a series of simpler tasks confers no advantage to the policy.
+        </p>
+        <div class="theorem">
+          <span>Definition</span>
+          <span>Planning Invariance</span>
+          $\def\sc#1{\dosc#1\csod} \def\dosc#1#2\csod{{\rm #1{\small #2}}}$Consider a deterministic
+          MDP with states $\S$, actions $\A$, and goal-conditioned Kronecker delta reward function
+          $r_{g}(s) = \delta_{(s,g)}$. For any goal-conditioned policy $\pi(a \mid s, g)$ where $g
+          \in \S$, we say that $\pi(a \mid s, g)$ is invariant under planning operator $\sc{PLAN}
+          \in \planclass$ if and only if \[ \pi(a \mid s, g) = \pi(a \mid s, w), \text{ where } w =
+          \sc{PLAN}(s, g). \]
+        </div>
+
+        <p>
+          In fact, this form of invariance is <em>already</em> present for a certain class of
+          policies, namely those which with a value function parameterized by a quasimetric.
+          Empirically, we find that other, weaker value parameterizations also confer varying
+          (lesser) degrees of planning invariance.
+        </p>
+        <div class="theorem">
+          <span>Theorem</span>
+          <span>Quasimetric policies are invariant under $\sc{PLAN}_{d}$</span>
+          Given a deterministic MDP with states $\gS$, actions $\gA$, and goal-conditioned Kronecker
+          delta reward function $r_{g}(s) = \delta_{(s,g)}$, define quasimetric policy
+          $\pi_{d}(a\mid s,g)$ and quasimetric planner class $ \planclass_{d}$. Then, for every
+          quasimetric planner $\sc{PLAN}_{d} \in \planclass_{d}$, there always exists a policy
+          $\pi_{d}(a\mid s,g)$ that is planning invariant: \[ \pi_{d}(a\mid s,g) =
+          \pi_{d}\bigl(a\mid s,w \text{ for } w= \sc{PLAN}_{d}(s,g)\bigr). \]
+        </div>
+
+        <div class="columns">
+          <div class="wide">
+            <img src="static/figures/rabbit_maze.svg" />
+          </div>
+          <div class="thin vertical">
+            <p class="caption">
+              <b>Figure.</b>
+              Planning invariance means that a policy should take similar actions when directed
+              towards a goal (purple arrow and purple star) as when directed towards an intermediate
+              waypoint (brown arrow and brown star).
+            </p>
+          </div>
+        </div>
+        <!-- <div> -->
+        <!--   <div class="columns"> -->
+        <!--     <div class="medium vertical"> -->
+        <!--       <img -->
+        <!--         src="static/figures/reach_fixed_quotes.svg" -->
+        <!--         alt="Image description" -->
+        <!--         style="width: 100%" /> -->
+        <!--       <p class="caption"> -->
+        <!--         <strong><em>Approximate</em> horizon generalization is still useful.</strong> -->
+        <!--         Success when there is horizon generalization. When the success attenuation factor -->
+        <!--         $\eta\gt0.5$, the Reach goes to $\infty$;. For a policy with no horizon -->
+        <!--         generalization ($\eta=1$), its $\sc{REACH} = 1$. -->
+        <!--       </p> -->
+        <!--     </div> -->
+        <!--   </div> -->
+        <!-- </div> -->
+      </section>
+
+      <section>
+        <h2>Planning Invariance enables Horizon Generalization</h2>
+
+        <div class="theorem">
+          <span>Definition</span>
+          <span>Horizon Generalization</span>
+          Suppose $c &gt; 0$ and $d(s, g)$ is a quasimetric over the start-goal space $\S \times
+          \S$. In the single-goal, controlled ("fixed") case, a policy $\pi(a\mid s,g)$
+          <em>generalizes over the horizon</em> if optimality over nearby start-goal pairs
+          $\mathcal{B}_{c} = \{(s,g) \in \mathcal{S \times S} \mid d(s,g) &lt; c\}$ everywhere
+          implies optimality over the entire state space $\mathcal{S}$.
+        </div>
+        <div class="columns xspace">
+          <div class="wide xpad">
+            <p>
+              A policy generalizes over the horizon if performance for start-goal pairs $(s,g)$
+              separated by a small temporal distance $d(s,g) < c$ yields improved performance over
+              more distant start-goal pairs $(s',g')$ with $d(s',g') > c$. This property is closely
+              related to the notion of planning invariance, and we theoretically show that planning
+              invariance is a necessary condition for horizon generalization.
+            </p>
+          </div>
+          <div class="medium xpad">
+            <img src="static/figures/horizon_generalization_dull_purple.svg" />
+          </div>
+        </div>
+        <div class="theorem">
+          <span>Definition</span>
+          <span>Path Relaxation Operator</span>
+          Let $\sc{PATH}_{d}(s,g)$ be the path relaxation operator over quasimetric $d(s,g)$. For
+          any triplet of states $(s,w,g) \in \gS \times \gS \times \gS$, \[ d(s,g) \leftarrow
+          \sc{PATH}_{d}(s,g) \triangleq \min_w d(s, w) + d(w, g). \]
+        </div>
+        <div class="theorem">
+          <span>Theorem</span>
+          <span>Horizon generalization exists</span>
+          Consider a deterministic goal-conditioned MDP with states $\gS$, actions $\gA$, and
+          goal-conditioned Kronecker delta reward function $r_{g}(s) = \delta_{(s,g)}$ where there
+          are no states outside of $\gS$. Let finite thresholds $c &gt; 0$ and quasimetrics $d(s,g)$
+          over the start-goal space $\gS \times \gS$ be given. Then, a quasimetric policy
+          $\pi_{d}(a\mid s,g)$ that is optimal over $\cB_{c} = \{(s,g) \in \mathcal{S \times S} \mid
+          d(s,g) &lt; c\}$ is optimal over the entire start-goal space $\cS \times \cS$.
+        </div>
+        <div class="columns xspace">
+          <div class="medium vertical">
+            <p class="caption">
+              <b>Figure.</b>
+              Empirically, we compare the degree of planning invariance and horizon generalization
+              ($\eta$ in figure) for different GCRL methods in a maze task. These quantities are
+              generally correlated. The exception is the random policy, which is trivially planning
+              invariant but does not generalize over the horizon&mdash;planning invariance is
+              necessary but not sufficient for horizon generalization.
+            </p>
+          </div>
+          <div class="wide vertical margin xpad">
+            <img src="static/figures/invariance_eta.svg" />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Empirical Evaluation of Horizon Generalization</h2>
+        <div class="yspace">
+          <div class="columns bxpad">
+            <div class="wide bxpad">
+              <img src="static/figures/ant_results.svg" />
+            </div>
+            <div class="half bxpad">
+              <p class="caption">
+                <b>Figure.</b>
+                We evaluate several RL methods, measuring the horizon generalization of each. These
+                results reveal that <em>(i)</em> some degree of horizon generalization is possible;
+                <em>(ii)</em> the learning algorithm influences the degree of generalization;
+                <em>(iii)</em> the value function architecture influences the degree of
+                generalization; and <em>(iv)</em> no method achieves perfect generalization,
+                suggesting room for improvement in future work. 
+              </p>
+            </div>
+          </div>
+          <div class="margin xpad">
+            <img src="static/figures/other_results.svg" />
+            <p class="caption">
+              <b>Figure.</b>
+              <i>(Left)</i> A large Ant maze environment with a winding S-shaped corridor.
+              <i>(Right)</i> A humanoid environment with a complex, high-dimensional observation space.
+              We evaluate the horizon generalization as measured by $\eta$ for a quasimetric
+              architecture (CMD) and a standard architecture (CRL), quantifying the ratio of success
+              rates when evaluating at 5m vs 10m, 15m vs 30m, and 25m vs 50m after training to reach
+              goals within 10m. 
+            </p>
+          </div>
+          <div class="columns">
+            <div class="half margin">
+              <div class="margin">
+                <img src="static/figures/fa_horizon.svg" />
+              </div>
+              <p class="caption">
+                <b>Figure.</b>
+                We evaluate on $(s, g)$ pairs of varying distances, observing that metric regression
+                with a quasimetric exhibits strong horizon generalization.
+              </p>
+            </div>
+            <div class="half margin">
+              <div class="margin">
+                <img src="static/figures/fa_planning.svg" />
+              </div>
+              <p class="caption">
+                <b>Figure.</b>
+                In line with our analysis, the policy that has strong horizon generalization is also
+                more invariant to planning: combining that policy with planning does not increase
+                performance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>
+          ${\bf B\kern-.05em{\small I\kern-.025em B}\kern-.08em
+          T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}$
+        </h2>
+        <pre
+          class="language-bibtex bibtex"
+          id="bibtex"
+          onclick="selectContent('#bibtex')"><code>@misc{myers2025horizon,
+    author       = {Myers, Vivek and Ji, Catherine and Eysenbach, Benjamin},
+    eprint       = {2501.02709},
+    eprinttype   = {arXiv},
+    howpublished = {arXiv:2501.02709},
+    title        = {{Horizon Generalization} in {Reinforcement Learning}},
+    url          = {https://arxiv.org/abs/2501.02709},
+    year         = {2025},
+}</code></pre>
+      </section>
+    </main>
+  </body>
+</html>
