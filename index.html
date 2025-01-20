@@ -97,7 +97,7 @@
           </a>
         </span>
         <span class="link">
-          <a href="https://github.com/TODO" class="button">
+          <a href="https://github.com/vivekmyers/horizon_generalization" class="button">
             <span class="icon"><i class="fas fa-code"></i></span><span>Code</span>
           </a>
         </span>
@@ -230,7 +230,13 @@
 
       <section>
         <h2>Planning Invariance enables Horizon Generalization</h2>
-
+        <div>
+          <p>
+            A policy generalizes over the horizon if performance for start-goal pairs $(s,g)$
+            separated by a small temporal distance $d(s,g) < c$ yields improved performance over
+            more distant start-goal pairs $(s',g')$ with $d(s',g') > c$.
+          </p>
+        </div>
         <div class="theorem">
           <span>Definition</span>
           <span>Horizon Generalization</span>
@@ -240,17 +246,16 @@
           $\mathcal{B}_{c} = \{(s,g) \in \mathcal{S \times S} \mid d(s,g) &lt; c\}$ everywhere
           implies optimality over the entire state space $\mathcal{S}$.
         </div>
-        <div class="columns xspace">
-          <div class="wide xpad">
+        <div class="columns">
+          <div class="wide vertical aypad">
             <p>
-              A policy generalizes over the horizon if performance for start-goal pairs $(s,g)$
-              separated by a small temporal distance $d(s,g) < c$ yields improved performance over
-              more distant start-goal pairs $(s',g')$ with $d(s',g') > c$. This property is closely
-              related to the notion of planning invariance, and we theoretically show that planning
-              invariance is a necessary condition for horizon generalization.
+              This property is closely related to the notion of planning invariance, and we
+              theoretically show that planning invariance is a necessary condition for horizon
+              generalization. Empirically, we will also see that planning invariance is closely
+              linked with this notion of horizon generalization.
             </p>
           </div>
-          <div class="medium xpad">
+          <div class="thin grow vertical">
             <img src="static/figures/horizon_generalization_dull_purple.svg" />
           </div>
         </div>
@@ -271,8 +276,8 @@
           $\pi_{d}(a\mid s,g)$ that is optimal over $\cB_{c} = \{(s,g) \in \mathcal{S \times S} \mid
           d(s,g) &lt; c\}$ is optimal over the entire start-goal space $\cS \times \cS$.
         </div>
-        <div class="columns xspace">
-          <div class="medium vertical">
+        <div class="columns xspace centered margin">
+          <div class="half vertical">
             <p class="caption">
               <b>Figure.</b>
               Empirically, we compare the degree of planning invariance and horizon generalization
@@ -290,36 +295,40 @@
 
       <section>
         <h2>Empirical Evaluation of Horizon Generalization</h2>
-        <div class="yspace">
-          <div class="columns bxpad">
-            <div class="wide bxpad">
-              <img src="static/figures/ant_results.svg" />
-            </div>
-            <div class="half bxpad">
-              <p class="caption">
-                <b>Figure.</b>
-                We evaluate several RL methods, measuring the horizon generalization of each. These
-                results reveal that <em>(i)</em> some degree of horizon generalization is possible;
-                <em>(ii)</em> the learning algorithm influences the degree of generalization;
-                <em>(iii)</em> the value function architecture influences the degree of
-                generalization; and <em>(iv)</em> no method achieves perfect generalization,
-                suggesting room for improvement in future work. 
-              </p>
+        <div class="yspace centered">
+          <div class="columns aypad centered">
+            <div class="full centered">
+              <div class="margin">
+                <img src="static/figures/ant_results.svg" />
+              </div>
+              <div class="bxpad">
+                <p class="caption">
+                  <b>Figure.</b>
+                  We evaluate several RL methods, measuring the horizon generalization of each.
+                  These results reveal that <em>(i)</em> some degree of horizon generalization is
+                  possible; <em>(ii)</em> the learning algorithm influences the degree of
+                  generalization; <em>(iii)</em> the value function architecture influences the
+                  degree of generalization; and <em>(iv)</em> no method achieves perfect
+                  generalization, suggesting room for improvement in future work.
+                </p>
+              </div>
             </div>
           </div>
           <div class="margin xpad">
-            <img src="static/figures/other_results.svg" />
+            <div class="margin">
+              <img src="static/figures/other_results.svg" />
+            </div>
             <p class="caption">
               <b>Figure.</b>
               <i>(Left)</i> A large Ant maze environment with a winding S-shaped corridor.
-              <i>(Right)</i> A humanoid environment with a complex, high-dimensional observation space.
-              We evaluate the horizon generalization as measured by $\eta$ for a quasimetric
+              <i>(Right)</i> A humanoid environment with a complex, high-dimensional observation
+              space. We evaluate the horizon generalization as measured by $\eta$ for a quasimetric
               architecture (CMD) and a standard architecture (CRL), quantifying the ratio of success
               rates when evaluating at 5m vs 10m, 15m vs 30m, and 25m vs 50m after training to reach
-              goals within 10m. 
+              goals within 10m.
             </p>
           </div>
-          <div class="columns">
+          <div class="columns bypad centered margin">
             <div class="half margin">
               <div class="margin">
                 <img src="static/figures/fa_horizon.svg" />

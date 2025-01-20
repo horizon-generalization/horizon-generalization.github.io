@@ -205,9 +205,11 @@ pre {
 .centered {
   width: 100%;
   margin: 20px 0;
-  display: flex;
-  justify-content: center;
   align-items: center;
+}
+
+.centered > * {
+  margin: 0 auto;
 }
 
 .figure {
@@ -224,6 +226,7 @@ div.columns {
 
 div.columns > div {
   margin-right: auto;
+  flex: 0 1 auto;
 }
 
 div.columns > .thin {
@@ -351,7 +354,7 @@ pre[class*="language-"]::selection {
 }
 
 .abstract {
-  padding: 1em 2em;
+  margin: 1em 2em;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -373,6 +376,14 @@ pre[class*="language-"]::selection {
 
 .xpad {
   padding: 0 1em;
+}
+
+.bypad {
+  padding-top: 1em;
+}
+
+.aypad {
+  padding-bottom: 1em;
 }
 
 .ypad {
