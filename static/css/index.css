@@ -29,6 +29,15 @@ video {
   margin: 20px 0;
 }
 
+a {
+  color: #20638f;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #aa551c;
+}
+
 section img,
 section video {
   width: 100%;
@@ -79,6 +88,7 @@ pre {
 
 .link a {
   text-decoration: none;
+  color: #fff;
 }
 
 .link .icon {
@@ -97,9 +107,13 @@ pre {
   margin: 0 10px;
 }
 
-.authors,
-.institution {
+.authors {
   margin-bottom: 0.5ex;
+  font-size: 15pt;
+}
+
+.notes {
+  margin-bottom: 1ex;
   font-size: 15pt;
 }
 
@@ -119,7 +133,7 @@ pre {
   padding-left: 0.5em;
 }
 
-.affiliations .affil {
+.notes .affil {
   font-weight: normal;
   font-size: 10pt;
   vertical-align: 5pt;
@@ -127,11 +141,11 @@ pre {
   width: 3pt;
 }
 
-.institution + .affil {
+.notes :is(.institution, .notice) + span {
   margin-left: 1.5em;
 }
 
-.institution + .institution {
+.notes :is(.institution, .notice) + .institution {
   margin-left: 2em;
 }
 
@@ -176,6 +190,24 @@ pre {
 .author.equal:after {
   display: inline-block;
   padding-right: 3pt;
+}
+
+.notes .notice.equal:before {
+  content: "*";
+  font-size: 19pt;
+  font-weight: normal;
+  vertical-align: -2pt;
+  display: inline-block;
+  width: 1ex;
+}
+
+.notes .notice.equaladv:before {
+  content: "\2020";
+  font-size: 14pt;
+  font-weight: normal;
+  vertical-align: 6pt;
+  display: inline-block;
+  width: 1ex;
 }
 
 .button {
@@ -397,4 +429,3 @@ div.xspace > div + div {
 div.yspace > div + div {
   margin-top: 1em;
 }
-
